@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
+import pdb
 import time
 
 from q_learning import QN
@@ -188,7 +189,6 @@ class DQN(QN):
 
         s_batch, a_batch, r_batch, sp_batch, done_mask_batch = replay_buffer.sample(
             self.config.batch_size)
-
 
         fd = {
             # inputs

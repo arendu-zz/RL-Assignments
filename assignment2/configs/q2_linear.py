@@ -13,7 +13,7 @@ class config():
     plot_output  = output_path + "scores.png"
 
     # model and training config
-    num_episodes_test = 20
+    num_episodes_test = 12
     grad_clip         = True
     clip_val          = 10
     saving_freq       = 5000
@@ -22,7 +22,7 @@ class config():
     soft_epsilon      = 0
 
     # hyper params
-    nsteps_train       = 10000
+    nsteps_train       = 20000
     batch_size         = 32
     buffer_size        = 1000
     target_update_freq = 500

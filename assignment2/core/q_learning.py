@@ -1,5 +1,6 @@
 import os
 import gym
+import pdb
 import numpy as np
 import logging
 import time
@@ -255,6 +256,7 @@ class QN(object):
 
         # occasionaly update target network with q network
         if t % self.config.target_update_freq == 0:
+            print 'update target', t
             self.update_target_params()
             
         # occasionaly save the weights
@@ -314,7 +316,7 @@ class QN(object):
         sigma_reward = np.sqrt(np.var(rewards) / len(rewards))
 
         if num_episodes > 1:
-            msg = "Average reward: {:04.2f} +/- {:04.2f}".format(avg_reward, sigma_reward)
+            msg = "Average reward ({:d}): {:04.2f} +/- {:04.2f} ".format(len(rewards), avg_reward, sigma_reward)
             self.logger.info(msg)
 
         return avg_reward

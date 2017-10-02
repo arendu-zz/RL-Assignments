@@ -54,9 +54,8 @@ class Linear(DQN):
         """
         ##############################################################
         ################YOUR CODE HERE (6-15 lines) ##################
-        print 'state_shape', state_shape
-        self.s = tf.placeholder(tf.uint8, shape=(None, state_shape[0], state_shape[1], state_shape[2] * 4), name='S')
-        self.sp = tf.placeholder(tf.uint8, shape=(None, state_shape[0], state_shape[1], state_shape[2] * 4), name='SP')
+        self.s = tf.placeholder(tf.uint8, shape=(None, state_shape[0], state_shape[1], state_shape[2] * self.config.state_history), name='S')
+        self.sp = tf.placeholder(tf.uint8, shape=(None, state_shape[0], state_shape[1], state_shape[2] * self.config.state_history), name='SP')
         self.a = tf.placeholder(tf.int32, shape=(None,), name='A')
         self.r = tf.placeholder(tf.float32, shape=(None,), name='R')
         self.done_mask = tf.placeholder(tf.bool, shape=(None,), name='DM')
@@ -100,8 +99,7 @@ class Linear(DQN):
         ##############################################################
         ################ YOUR CODE HERE - 2-3 lines ################## 
         flat_state = layers.flatten(state)
-        print flat_state.shape, 'flat_state', num_actions, 'num_actions'
-        out =  layers.fully_connected(flat_state, num_actions, scope=scope)
+        out =  layers.fully_connected(flat_state, num_actions, activation_fn = None,  scope=scope)
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -164,7 +162,6 @@ class Linear(DQN):
         """
         # you may need this variable
         num_actions = self.env.action_space.n
-
         ##############################################################
         """
         TODO: The loss for an example is defined as:
@@ -227,10 +224,7 @@ class Linear(DQN):
         ##############################################################
         #################### YOUR CODE HERE - 8-12 lines #############
         adam = tf.train.AdamOptimizer(self.lr)
-        print 'scope', scope
-        print len(tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope))
         _grad_and_vars = adam.compute_gradients(self.loss, tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope))
-        print _grad_and_vars
         _grad_and_vars = [(tf.clip_by_norm(g, self.config.clip_val),v) for g,v in _grad_and_vars]
         self.grad_norm = tf.global_norm([g for g,v in _grad_and_vars])
         self.train_op = adam.apply_gradients(_grad_and_vars)
@@ -241,7 +235,7 @@ class Linear(DQN):
 
 
 if __name__ == '__main__':
-    env = EnvTest((5, 5, 1))
+    env = EnvTest((2, 1, 1))
 
     # exploration strategy
     exp_schedule = LinearExploration(env, config.eps_begin, 
